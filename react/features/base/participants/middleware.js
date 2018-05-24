@@ -1,7 +1,11 @@
 // @flow
 
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../../app';
-import { CONFERENCE_LEFT, CONFERENCE_WILL_JOIN } from '../conference';
+import {
+    CONFERENCE_LEFT,
+    CONFERENCE_WILL_JOIN,
+    getCurrentConference
+} from '../conference';
 import { CALLING, INVITED } from '../../presence-status';
 import { MiddlewareRegistry, StateListenerRegistry } from '../redux';
 import UIEvents from '../../../../service/UI/UIEvents';
@@ -133,11 +137,7 @@ MiddlewareRegistry.register(store => next => action => {
  * with multiplying thumbnails in the filmstrip.
  */
 StateListenerRegistry.register(
-    /* selector */ state => {
-        const { conference, joining } = state['features/base/conference'];
-
-        return conference || joining;
-    },
+    /* selector */ state => getCurrentConference(state),
     /* listener */ (conference, { dispatch, getState }) => {
         for (const p of getState()['features/base/participants']) {
             !p.local
