@@ -271,6 +271,7 @@ function _conferenceWillLeave(state, { conference }) {
 
     return assign(state, {
         authRequired: undefined,
+        conference: undefined,
         joining: undefined,
 
         /**
