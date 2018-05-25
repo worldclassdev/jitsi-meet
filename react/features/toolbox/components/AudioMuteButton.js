@@ -121,8 +121,8 @@ class AudioMuteButton extends AbstractAudioMuteButton<Props, *> {
      */
     _setAudioMuted(audioMuted: boolean) {
         sendAnalytics(createToolbarEvent(AUDIO_MUTE, { enable: audioMuted }));
-        this.props.dispatch(setAudioMuted(audioMuted));
-
+        this.props.dispatch(
+            setAudioMuted(audioMuted, /* ensureTrack */ true));
         // FIXME: The old conference logic as well as the shared video feature
         // still rely on this event being emitted.
         typeof APP === 'undefined'
