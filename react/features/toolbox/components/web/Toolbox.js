@@ -682,6 +682,20 @@ class Toolbox extends Component<Props> {
         this._doOpenFeedback();
     }
 
+    _onToolbarOpenPolling: () => void;
+
+    /**
+     * Creates an analytics toolbar event and dispatches an action for toggling
+     * display of feedback.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToolbarOpenPolling() {
+        sendAnalytics(createToolbarEvent('polling'));
+
+        this._doOpenPolling();
+    }
     _onToolbarOpenInvite: () => void;
 
     /**
@@ -725,6 +739,7 @@ class Toolbox extends Component<Props> {
 
         this._doOpenSpeakerStats();
     }
+    
 
     _onToolbarOpenVideoQuality: () => void;
 
@@ -988,6 +1003,13 @@ class Toolbox extends Component<Props> {
                     text = { _fullScreen
                         ? t('toolbar.exitFullScreen')
                         : t('toolbar.enterFullScreen') } />,
+            this._shouldShowButton('profile')
+                        && <OverflowMenuItem
+                            accessibilityLabel = 'Polls'
+                            icon = 'icon-presentation'
+                            key = 'polls'
+                            onClick = '#'
+                            text = 'Polling' />,
             _recordingEnabled
                 && this._shouldShowButton('livestreaming')
                 && <OverflowMenuLiveStreamingItem
@@ -1016,6 +1038,7 @@ class Toolbox extends Component<Props> {
                     text = { _editingDocument
                         ? t('toolbar.documentClose')
                         : t('toolbar.documentOpen') } />,
+ 
             <SettingsButton
                 key = 'settings'
                 showLabel = { true }
