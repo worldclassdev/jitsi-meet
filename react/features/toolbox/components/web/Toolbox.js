@@ -21,6 +21,7 @@ import { getLocalVideoTrack, toggleScreensharing } from '../../../base/tracks';
 import { ChatCounter } from '../../../chat';
 import { toggleDocument } from '../../../etherpad';
 import { openFeedbackDialog } from '../../../feedback';
+import { openPollingDialog } from '../../../polling';
 import {
     beginAddPeople,
     InfoDialogButton,
@@ -213,6 +214,8 @@ class Toolbox extends Component<Props> {
 
         this._onToolbarOpenFeedback
             = this._onToolbarOpenFeedback.bind(this);
+        this._onToolbarOpenPolling
+             = this._onToolbarOpenPolling.bind(this);
         this._onToolbarOpenInvite = this._onToolbarOpenInvite.bind(this);
         this._onToolbarOpenKeyboardShortcuts
             = this._onToolbarOpenKeyboardShortcuts.bind(this);
@@ -404,6 +407,19 @@ class Toolbox extends Component<Props> {
 
         this.props.dispatch(openFeedbackDialog(_conference));
     }
+
+    /**
+     * Callback invoked to display {@code PollingDialog}.
+     *
+     * @private
+     * @returns {void}
+     */
+    _doOpenPolling() {
+        const { _conference } = this.props;
+
+        this.props.dispatch(openPollingDialog(_conference));
+    }
+
 
     /**
      * Dispatches an action to display {@code KeyboardShortcuts}.
@@ -724,7 +740,6 @@ class Toolbox extends Component<Props> {
 
         this._doOpenKeyboardShorcuts();
     }
-
     _onToolbarOpenSpeakerStats: () => void;
 
     /**
@@ -739,7 +754,6 @@ class Toolbox extends Component<Props> {
 
         this._doOpenSpeakerStats();
     }
-    
 
     _onToolbarOpenVideoQuality: () => void;
 
@@ -1008,7 +1022,7 @@ class Toolbox extends Component<Props> {
                             accessibilityLabel = 'Polls'
                             icon = 'icon-presentation'
                             key = 'polls'
-                            onClick = '#'
+                            onClick = { this._onToolbarOpenPolling }
                             text = 'Polling' />,
             _recordingEnabled
                 && this._shouldShowButton('livestreaming')
@@ -1029,7 +1043,7 @@ class Toolbox extends Component<Props> {
                         ? t('toolbar.stopSharedVideo')
                         : t('toolbar.sharedvideo') } />,
             this._shouldShowButton('etherpad')
-                && _etherpadInitialized
+                            && _etherpadInitialized
                 && <OverflowMenuItem
                     accessibilityLabel = 'Etherpad'
                     icon = 'icon-share-doc'
@@ -1038,7 +1052,6 @@ class Toolbox extends Component<Props> {
                     text = { _editingDocument
                         ? t('toolbar.documentClose')
                         : t('toolbar.documentOpen') } />,
- 
             <SettingsButton
                 key = 'settings'
                 showLabel = { true }

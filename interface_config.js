@@ -49,7 +49,7 @@ var interfaceConfig = {
         // extended toolbar
         'profile', 'info', 'polls', 'chat', 'recording', 'livestreaming', 'etherpad',
         'sharedvideo', 'settings', 'raisehand', 'videoquality', 'filmstrip',
-        'invite', 'feedback', 'stats', 'shortcuts'
+        'invite', 'feedback', 'stats', 'shortcuts', 'testing'
     ],
 
     SETTINGS_SECTIONS: [ 'language', 'devices', 'moderator' ],
