@@ -697,21 +697,6 @@ class Toolbox extends Component<Props> {
 
         this._doOpenFeedback();
     }
-
-    _onToolbarOpenPolling: () => void;
-
-    /**
-     * Creates an analytics toolbar event and dispatches an action for toggling
-     * display of feedback.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToolbarOpenPolling() {
-        sendAnalytics(createToolbarEvent('polling'));
-
-        this._doOpenPolling();
-    }
     _onToolbarOpenInvite: () => void;
 
     /**
@@ -1023,7 +1008,7 @@ class Toolbox extends Component<Props> {
                             icon = 'icon-presentation'
                             key = 'polls'
                             onClick = { this._onToolbarOpenPolling }
-                            text = 'Polling' />,
+                            text = { t('toolbar.polls') } />,
             _recordingEnabled
                 && this._shouldShowButton('livestreaming')
                 && <OverflowMenuLiveStreamingItem

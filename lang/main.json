@@ -108,12 +108,12 @@
         "micDisabled": "Microphone is not available",
         "filmstrip": "Show / Hide videos",
         "pip": "Enter Picture-in-Picture mode",
+        "polls": "Create a Poll",
         "profile": "Edit your profile",
         "raiseHand": "Raise / Lower your hand",
         "shortcuts": "View shortcuts",
         "speakerStats": "Speaker stats",
-        "invite": "Invite people",
-        "polls": "Create a Poll"
+        "invite": "Invite people"
     },
     "chat":{
         "nickname": {
