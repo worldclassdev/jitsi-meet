@@ -21,7 +21,7 @@ import { getLocalVideoTrack, toggleScreensharing } from '../../../base/tracks';
 import { ChatCounter } from '../../../chat';
 import { toggleDocument } from '../../../etherpad';
 import { openFeedbackDialog } from '../../../feedback';
-import { openPollingDialog } from '../../../polling';
+
 import {
     beginAddPeople,
     InfoDialogButton,
@@ -40,6 +40,7 @@ import { SettingsButton } from '../../../settings';
 import { toggleSharedVideo } from '../../../shared-video';
 import { toggleChat, toggleProfile } from '../../../side-panel';
 import { SpeakerStats } from '../../../speaker-stats';
+import Polling from '../../../polling';
 import {
     OverflowMenuVideoQualityItem,
     VideoQualityDialog
@@ -415,9 +416,9 @@ class Toolbox extends Component<Props> {
      * @returns {void}
      */
     _doOpenPolling() {
-        const { _conference } = this.props;
-
-        this.props.dispatch(openPollingDialog(_conference));
+        this.props.dispatch(openDialog(Polling, {
+            conference: this.props._conference
+        }));
     }
 
 
@@ -751,8 +752,6 @@ class Toolbox extends Component<Props> {
      * @returns {void}
      */
     _onToolbarOpenPolling() {
-        sendAnalytics(createToolbarEvent('polling'));
-
         this._doOpenPolling();
     }
 
