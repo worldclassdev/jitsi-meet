@@ -740,6 +740,22 @@ class Toolbox extends Component<Props> {
         this._doOpenSpeakerStats();
     }
 
+
+    _onToolbarOpenPolling: () => void;
+
+    /**
+     * Creates an analytics toolbar event and dispatches an action for toggling
+     * display of polling.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToolbarOpenPolling() {
+        sendAnalytics(createToolbarEvent('polling'));
+
+        this._doOpenPolling();
+    }
+
     _onToolbarOpenVideoQuality: () => void;
 
     /**
