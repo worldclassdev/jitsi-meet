@@ -40,7 +40,7 @@ import { SettingsButton } from '../../../settings';
 import { toggleSharedVideo } from '../../../shared-video';
 import { toggleChat, toggleProfile } from '../../../side-panel';
 import { SpeakerStats } from '../../../speaker-stats';
-import Polling from '../../../polling';
+import { PollingDialog } from '../../../polling';
 import {
     OverflowMenuVideoQualityItem,
     VideoQualityDialog
@@ -190,7 +190,8 @@ declare var interfaceConfig: Object;
  *
  * @extends Component
  */
-class Toolbox extends Component<Props> {
+class Toolbox extends Component<> {
+    static defaultProps: Props;
     /**
      * Initializes a new {@code Toolbox} instance.
      *
@@ -410,19 +411,6 @@ class Toolbox extends Component<Props> {
     }
 
     /**
-     * Callback invoked to display {@code PollingDialog}.
-     *
-     * @private
-     * @returns {void}
-     */
-    _doOpenPolling() {
-        this.props.dispatch(openDialog(Polling, {
-            conference: this.props._conference
-        }));
-    }
-
-
-    /**
      * Dispatches an action to display {@code KeyboardShortcuts}.
      *
      * @private
@@ -430,6 +418,19 @@ class Toolbox extends Component<Props> {
      */
     _doOpenKeyboardShorcuts() {
         this.props.dispatch(openKeyboardShortcutsDialog());
+    }
+
+
+    /**
+     * Callback invoked to display {@code PollingDialog}.
+     *
+     * @private
+     * @returns {void}
+     */
+    _doOpenPollingDialog() {
+        this.props.dispatch(openDialog(PollingDialog, {
+            conference: this.props._conference
+        }));
     }
 
     /**
@@ -745,14 +746,14 @@ class Toolbox extends Component<Props> {
     _onToolbarOpenPolling: () => void;
 
     /**
-     * Creates an analytics toolbar event and dispatches an action for toggling
+     * Dispatches an action for toggling
      * display of polling.
      *
      * @private
      * @returns {void}
      */
     _onToolbarOpenPolling() {
-        this._doOpenPolling();
+        this._doOpenPollingDialog();
     }
 
     _onToolbarOpenVideoQuality: () => void;

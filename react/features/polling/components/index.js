@@ -1,1 +1,1 @@
-export { default as Polling } from './Polling';
+export { default as PollingDialog } from './PollingDialog';

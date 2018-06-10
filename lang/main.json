@@ -45,6 +45,9 @@
         "videoMute": "Start or stop your camera",
         "showSpeakerStats": "Show speaker stats"
     },
+    "polling":{
+        "polling": "Join/ Start a Poll"
+    },
     "welcomepage":{
         "appDescription": "Go ahead, video chat with the whole team. In fact, invite everyone you know. __app__ is a fully encrypted, 100% open source video conferencing solution that you can use all day, every day, for free — with no account needed.",
         "audioVideoSwitch": {
