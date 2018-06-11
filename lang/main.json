@@ -46,7 +46,7 @@
         "showSpeakerStats": "Show speaker stats"
     },
     "polling":{
-        "polling": "Join/ Start a Poll"
+        "polling": "Join or Create a Poll"
     },
     "welcomepage":{
         "appDescription": "Go ahead, video chat with the whole team. In fact, invite everyone you know. __app__ is a fully encrypted, 100% open source video conferencing solution that you can use all day, every day, for free — with no account needed.",
@@ -111,7 +111,7 @@
         "micDisabled": "Microphone is not available",
         "filmstrip": "Show / Hide videos",
         "pip": "Enter Picture-in-Picture mode",
-        "polls": "Create a Poll",
+        "polls": "Join / Create a Poll",
         "profile": "Edit your profile",
         "raiseHand": "Raise / Lower your hand",
         "shortcuts": "View shortcuts",
