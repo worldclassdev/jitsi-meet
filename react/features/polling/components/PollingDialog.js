@@ -1,27 +1,22 @@
 // @flow
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { Dialog } from '../../base/dialog';
 import { translate } from '../../base/i18n';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import RadioGroup, { AkFieldRadioGroup, AkRadio } from '@atlaskit/field-radio-group';
-import Form, {
-    Field,
-    FieldGroup,
-    FormHeader,
-    FormSection,
-    FormFooter,
-  } from '@atlaskit/form';
-  import FieldText from '@atlaskit/field-text';
-  import PollingForm from './PollingForm'
+import { AkFieldRadioGroup } from '@atlaskit/field-radio-group';
+import PollingForm from './PollingForm';
+import { createNewPoll } from '../actions';
+
 
 /**
  * React component for displaying the polling dialog.
  *
  * @extends Component
  */
-class PollingDialog extends Component<void, State> {
+class PollingDialog extends Component<> {
 
     /**
      * Polling Dialog's component's property types.
@@ -34,10 +29,24 @@ class PollingDialog extends Component<void, State> {
          */
         conference: PropTypes.object,
 
+
+        /**
+         * Creates a new poll.
+         *
+         * @type {Function}
+         */
+        createNewPoll: PropTypes.func,
+
+        /**
+         * Contains list of polls from redux
+         */
+        polls: PropTypes.array,
+
         /**
          * The function to translate human-readable text.
          */
         t: PropTypes.func
+
     };
 
     /**
@@ -48,6 +57,9 @@ class PollingDialog extends Component<void, State> {
      */
     constructor(props) {
         super(props);
+        this.state = {
+            showForm: false
+        };
 
         // Bind event handlers so they are only bound once per instance.
         this._onCreatePoll = this._onCreatePoll.bind(this);
@@ -55,34 +67,19 @@ class PollingDialog extends Component<void, State> {
         this._onCancelPoll = this._onCancelPoll.bind(this);
     }
 
-    state = {
-        polls: [
-            {
-                question: "What is your favourite color?",
-                value: "",
-                options: [
-                    { name: "color2", value: "red", label: "Red" },
-                    { name: "color2", value: "blue", label: "Blue" },
-                    { name: "color2", value: "yellow", label: "Yellow" }
-                ]
-            }
-        ],
-        showForm: false
-    };
-
     /**
      * Load state from session storage
      *
      * @inheritdoc
      * @returns {void}
      */
-    componentDidMount() {
-        const cachedPolls = sessionStorage.getItem('state');
-        if (cachedPolls) {
-          this.setState({ polls: JSON.parse(cachedPolls) });
-          return;
-        }
-    }
+    // componentDidMount() {
+    //     const cachedPolls = sessionStorage.getItem('state');
+    //     if (cachedPolls) {
+    //       this.setState({ polls: JSON.parse(cachedPolls) });
+    //       return;
+    //     }
+    // }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -91,36 +88,39 @@ class PollingDialog extends Component<void, State> {
      * @returns {ReactElement}
      */
     render() {
-        var existingPolls = this.state.polls.map((poll, i) => {
-            return(
-               <div key= { i }>
-                    <AkFieldRadioGroup  
-                            items={ poll.options }
-                            label={ poll.question }
-                            onRadioChange={ this.setValue }
-                     />
-                     <br />
-               </div>
-            );
-        });
+        const existingPolls = this.props.polls.map((poll, i) =>
+            (<div key= { i }>
+                <AkFieldRadioGroup
+                    items = { poll.options }
+                    label = { `${poll.question}` }
+                    onRadioChange = { this.setValue }
+                    />
+                    <br />
+               </div>)
+        );
+
+
         return (
             <Dialog
                 cancelTitleKey = { 'dialog.close' }
                 submitDisabled = { true }
                 titleKey = 'polling.polling' >
                 <div className = 'polling'>
-                    <p>Cast your vote then submit or create a poll</p>
+                    <p>Vote then submit or create a poll</p>
                     <div>
                         { existingPolls }
-                         <br />
-                         { this.state.showForm ? <PollingForm cancelPoll= {this._onCancelPoll}
-                           sendPoll= {this._sendPollHandler} /> : null }
-                         <hr />
-                         <ButtonGroup>
+                        <br />
+                        { this.state.showForm ? <PollingForm
+                            cancelPoll = { this._onCancelPoll }
+                            sendPoll = { this.props.createNewPoll } /> : null }
+                        <hr />
+                        <ButtonGroup>
                             <Button appearance = 'subtle'>
                                 Submit
                             </Button>
-                            <Button onClick= {this._onCreatePoll} appearance = 'primary'>
+                            <Button
+                                appearance = 'primary'
+                                onClick = { this._onCreatePoll }>
                                 Create new Poll
                             </Button>
                         </ButtonGroup>
@@ -134,18 +134,48 @@ class PollingDialog extends Component<void, State> {
         this.setState({ showForm: true });
     }
 
-    _sendPollHandler(newPoll) {
-        var newPollList =this.state.polls;
-        newPollList.push(newPoll);
-        this.setState({ polls: newPollList });
-        this.setState({ showForm: false });
-        sessionStorage.setItem('state', JSON.stringify(this.state.polls));
-    }
-
     _onCancelPoll() {
         this.setState({ showForm: false });
     }
 
 }
 
-export default translate(PollingDialog);
+/**
+ * Maps (parts of) the redux state to {@link Toolbox}'s React {@code Component}
+ * props.
+ *
+ * @param {Object} state - The redux store/state.
+ * @private
+ * @returns {{}}
+ */
+function _mapStateToProps(state) {
+    const pollingState = state['features/polling'];
+
+    return {
+        polls: pollingState.polls
+    };
+}
+
+/**
+ * Maps part of redux actions to component's props.
+ *
+ * @param {Function} dispatch - Redux's {@code dispatch} function.
+ * @private
+ * @returns {Object}
+ */
+function _mapDispatchToProps(dispatch: Function): Object {
+    return {
+        /**
+         * Dispatches the redux action to reload the page.
+         *
+         * @protected
+         * @returns {Object} Dispatched action.
+         */
+        createNewPoll() {
+            dispatch(createNewPoll());
+        }
+    };
+}
+
+
+export default translate(connect(_mapStateToProps, _mapDispatchToProps)(PollingDialog));
