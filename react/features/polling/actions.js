@@ -17,7 +17,7 @@ import {
 /**
  * Signals that a new poll should be created
  *
- * 
+ *
  * @returns {{
  *     type: CREATE_NEW_POLL
  *     pollItem : object
@@ -26,13 +26,13 @@ import {
 export function createNewPoll(pollItem: object) {
     return {
         type: CREATE_NEW_POLL,
-        pollItem
+        poll: pollItem
     };
 }
 
 /**
  * Signals that a vote has been cast and updates the polls accordingly
- * 
+ *
  * @returns {{
  *     type: UPDATE_POLL,
  *     polls: array
@@ -41,7 +41,7 @@ export function createNewPoll(pollItem: object) {
 export function updatePolls(polls: Array) {
     return {
         type: UPDATE_POLL,
-        polls: polls
+        polls
     };
 }
 
@@ -54,19 +54,13 @@ export function updatePolls(polls: Array) {
  * participant is allowed to not specify an associated {@code JitsiConference}
  * instance.
  * @returns {{
- *     type: DOMINANT_SPEAKER_CHANGED,
- *     participant: {
- *         conference: JitsiConference,
- *         id: string
- *     }
+ *     type: NEW_POLL_CREATED,
+ *     polls: object
  * }}
  */
-export function newPollCreated(id, conference) {
+export function newPollCreated(polls: Array) {
     return {
-        type: DOMINANT_SPEAKER_CHANGED,
-        participant: {
-            conference,
-            id
-        }
+        type: NEW_POLL_CREATED,
+        polls
     };
 }

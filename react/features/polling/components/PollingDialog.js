@@ -35,7 +35,7 @@ class PollingDialog extends Component<> {
          *
          * @type {Function}
          */
-        createNewPoll: PropTypes.func,
+        newPoll: PropTypes.func,
 
         /**
          * Contains list of polls from redux
@@ -63,23 +63,8 @@ class PollingDialog extends Component<> {
 
         // Bind event handlers so they are only bound once per instance.
         this._onCreatePoll = this._onCreatePoll.bind(this);
-        this._sendPollHandler = this._sendPollHandler.bind(this);
         this._onCancelPoll = this._onCancelPoll.bind(this);
     }
-
-    /**
-     * Load state from session storage
-     *
-     * @inheritdoc
-     * @returns {void}
-     */
-    // componentDidMount() {
-    //     const cachedPolls = sessionStorage.getItem('state');
-    //     if (cachedPolls) {
-    //       this.setState({ polls: JSON.parse(cachedPolls) });
-    //       return;
-    //     }
-    // }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -112,7 +97,7 @@ class PollingDialog extends Component<> {
                         <br />
                         { this.state.showForm ? <PollingForm
                             cancelPoll = { this._onCancelPoll }
-                            sendPoll = { this.props.createNewPoll } /> : null }
+                            sendPoll = { this.props.newPoll } /> : null }
                         <hr />
                         <ButtonGroup>
                             <Button appearance = 'subtle'>
@@ -152,7 +137,8 @@ function _mapStateToProps(state) {
     const pollingState = state['features/polling'];
 
     return {
-        polls: pollingState.polls
+        polls: pollingState.polls,
+        
     };
 }
 
@@ -171,8 +157,8 @@ function _mapDispatchToProps(dispatch: Function): Object {
          * @protected
          * @returns {Object} Dispatched action.
          */
-        createNewPoll() {
-            dispatch(createNewPoll());
+        newPoll(poll: object) {
+            dispatch(createNewPoll(poll));
         }
     };
 }

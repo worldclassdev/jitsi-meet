@@ -1,7 +1,9 @@
 // @flow
 import { NEW_POLL_CREATED } from './actionTypes';
-import { MiddlewareRegistry } from '../redux';
+import { MiddlewareRegistry } from '../base/redux';
+import { updatePolls } from './actions';
 
+declare var APP: Object;
 
 /**
  * Middleware that sends updated poll to all users as JSON
@@ -9,11 +11,24 @@ import { MiddlewareRegistry } from '../redux';
  * @param {Store} store - The redux store.
  * @returns {Function}
  */
-MiddlewareRegistry.register(() => next => action => {
+MiddlewareRegistry.register((store) => next => action => {
     switch (action.type) {
-        case NEW_POLL_CREATED:
+    case NEW_POLL_CREATED: {
+        polls && store.dispatch(updatePolls(polls));
+        const m = {
+            'jitsi-meet-muc-msg-topic': 'polls',
+            'payload': {
+                'data': polls
+            }
+        };
+
+        console.log('middleware ran as planned');
+        typeof APP === 'object' && APP.conference._room.sendMessage(m);
+        break;
+    }
 
     }
+
     return next(action);
 });
 
@@ -36,6 +51,5 @@ MiddlewareRegistry.register(() => next => action => {
 //                 && dispatch(participantLeft(p.id, p.conference));
 //         }
 //     });
-
 
 

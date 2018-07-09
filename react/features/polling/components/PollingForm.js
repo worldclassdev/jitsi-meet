@@ -9,9 +9,9 @@ import Form, {
     FieldGroup,
     FormHeader,
     FormSection,
-    FormFooter,
-  } from '@atlaskit/form';
-  import FieldText from '@atlaskit/field-text';
+    FormFooter
+} from '@atlaskit/form';
+import FieldText from '@atlaskit/field-text';
 
 /**
  * React component for displaying the polling dialog.
@@ -49,52 +49,78 @@ class PollingForm extends Component<*, *> {
      */
     render() {
         return (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div
+                style = {{ display: 'flex',
+                    flexDirection: 'column' }}>
                 <Form
-                name="newPollForm"
-                onSubmit={ this._sendPollHandler }
-                >
-                <FormHeader
-                    description="Add your question and options in the fields below"
-                />
+                    name = 'newPollForm'
+                    onSubmit = { this._sendPollHandler }>
+                    <FormHeader
+                        description = 'Add your question and options in the fields below' />
 
-                <FormSection name="newPoll" >
-                    <Field label="Question:" required >
-                        <FieldText name="question" value={this.state.question} onChange={this._onChangeHandler} placeholder="Enter the question here" />
-                    </Field>
-                    <Field label="Option A:" required >
-                        <FieldText name="optionA"  value={this.state.optionA} onChange={this._onChangeHandler}  placeholder="Enter the first option" />
-                    </Field>
-                    <Field label="Option B:" required >
-                        <FieldText name="optionB"  value={this.state.optionB} onChange={this._onChangeHandler}  placeholder="Enter the second option" />
-                    </Field>
-                    <Field label="Option C:" >
-                        <FieldText name="optionC"  value={this.state.optionC} onChange={this._onChangeHandler}  placeholder="Enter the third option" />
-                    </Field>
-                </FormSection>
+                    <FormSection name = 'newPoll' >
+                        <Field
+                            label = 'Question:'
+                            required = { true } >
+                            <FieldText
+                                                                name = 'question'
+                                onChange = { this._onChangeHandler }
+                                placeholder = 'Enter the question here'
+                                value = { this.state.question } />
+                        </Field>
+                        <Field
+                            label = 'Option A:'
+                            required = { true } >
+                            <FieldText
+                                                                name = 'optionA'
+                                onChange = { this._onChangeHandler }
+                                placeholder = 'Enter the first option'
+                                value = { this.state.optionA } />
+                        </Field>
+                        <Field
+                            label = 'Option B:'
+                            required = { true } >
+                            <FieldText
+                                                                name = 'optionB'
+                                onChange = { this._onChangeHandler }
+                                placeholder = 'Enter the second option'
+                                value = { this.state.optionB } />
+                        </Field>
+                        <Field label = 'Option C:' >
+                            <FieldText
+                                name = 'optionC'
+                                onChange = { this._onChangeHandler }
+                                placeholder = 'Enter the third option'
+                                value = { this.state.optionC } />
+                        </Field>
+                    </FormSection>
 
-                <FormFooter>
-                    <ButtonGroup>
-                    <Button onClick={this._sendPollHandler} appearance="primary">
+                    <FormFooter>
+                        <ButtonGroup>
+                            <Button
+                                appearance = 'primary'
+                                onClick = { this._sendPollHandler }>
                         Send
-                    </Button>
-                    <Button onClick={this.props.cancelPoll}  appearance="danger">
+                            </Button>
+                            <Button
+                                                                appearance = 'danger'
+                                onClick = { this.props.cancelPoll }>
                         Cancel
-                    </Button>
-                    </ButtonGroup>
-                </FormFooter>
+                            </Button>
+                        </ButtonGroup>
+                    </FormFooter>
                 </Form>
             </div>
         );
     }
     _onChangeHandler(e) {
         this.setState({
-         [e.target.name] : e.target.value
+            [e.target.name]: e.target.value
         });
     }
 
     _createOptionObject(option) {
-        return(
+        return (
             {
                 name: option,
                 value: option,
@@ -104,17 +130,25 @@ class PollingForm extends Component<*, *> {
     }
 
     _sendPollHandler() {
-        var options = [];
+        const options = [];
+
         console.log(this.state.optionA, this.state.optionB, this.state.optionC);
         options.push(this._createOptionObject(this.state.optionA));
         options.push(this._createOptionObject(this.state.optionB));
         options.push(this._createOptionObject(this.state.optionC));
-        
+
+        console.log(
+            {
+                question: this.state.question,
+                value: '',
+                options
+            });
+
         this.props.sendPoll(
             {
                 question: this.state.question,
                 value: '',
-                options: options
+                options
             }
         );
         this.setState(

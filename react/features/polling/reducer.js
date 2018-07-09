@@ -4,6 +4,7 @@ import { ReducerRegistry, set } from '../base/redux';
 
 import {
     CREATE_NEW_POLL,
+    NEW_POLL_CREATED,
     UPDATE_POLL
 } from './actionTypes';
 
@@ -59,9 +60,10 @@ ReducerRegistry.register(
     (state: Object = _getInitialState(), action: Object) => {
         switch (action.type) {
         case CREATE_NEW_POLL:
+        let newState = Object.assign({}, state)
             return {
                 ...state,
-                polls: polls.push(action.pollItem)
+                polls: newState.polls.push(action.poll)
             };
             break;
 
@@ -71,6 +73,11 @@ ReducerRegistry.register(
                 polls: action.polls
             };
             break;
+        case NEW_POLL_CREATED:
+            return {
+                ...state,
+                polls: action.polls
+            }
         default:
             return state;
         }

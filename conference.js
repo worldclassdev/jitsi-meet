@@ -85,6 +85,7 @@ import {
     participantRoleChanged,
     participantUpdated
 } from './react/features/base/participants';
+import { newPollCreated } from './react/features/polling'
 import { updateSettings } from './react/features/base/settings';
 import {
     createLocalTracksF,
