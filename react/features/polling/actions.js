@@ -2,8 +2,9 @@
 
 import {
     CREATE_NEW_POLL,
-    NEW_POLL_CREATED,
-    UPDATE_POLL
+    TOGGLE_FORM,
+    UPDATE_NEW_POLL,
+    UPDATE_POLLS
 } from './actionTypes';
 
 
@@ -23,7 +24,7 @@ import {
  *     pollItem : object
  * }}
  */
-export function createNewPoll(pollItem: object) {
+export function createNewPoll(pollItem) {
     return {
         type: CREATE_NEW_POLL,
         poll: pollItem
@@ -40,27 +41,38 @@ export function createNewPoll(pollItem: object) {
  */
 export function updatePolls(polls: Array) {
     return {
-        type: UPDATE_POLL,
+        type: UPDATE_POLLS,
         polls
     };
 }
 
 /**
- * Create an action for when dominant speaker changes.
+ * Shows or hides the create poll form.
  *
- * @param {string} id - Participant's ID.
- * @param {JitsiConference} conference - The {@code JitsiConference} associated
- * with the participant identified by the specified {@code id}. Only the local
- * participant is allowed to not specify an associated {@code JitsiConference}
- * instance.
  * @returns {{
- *     type: NEW_POLL_CREATED,
- *     polls: object
+ *     type: TOGGLE_FORM
  * }}
  */
-export function newPollCreated(polls: Array) {
+export function toggleForm(formState: boolean) {
     return {
-        type: NEW_POLL_CREATED,
-        polls
+        type: TOGGLE_FORM,
+        payload: formState
+    };
+}
+
+/**
+ * Signals that a new poll was created and should
+ * be added to state
+ *
+ *
+ * @returns {{
+ *     type: UPDATE_NEW_POLL
+ *     poll : object
+ * }}
+ */
+export function updateNewPoll(poll) {
+    return {
+        type: UPDATE_NEW_POLL,
+        poll
     };
 }

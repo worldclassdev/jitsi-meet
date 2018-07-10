@@ -1,10 +1,11 @@
 // @flow
 
-import { ReducerRegistry, set } from '../base/redux';
+import { ReducerRegistry } from '../base/redux';
 
 import {
     CREATE_NEW_POLL,
-    NEW_POLL_CREATED,
+    TOGGLE_FORM,
+    UPDATE_NEW_POLL,
     UPDATE_POLL
 } from './actionTypes';
 
@@ -51,33 +52,35 @@ function _getInitialState() {
                     }
                 ]
             }
-        ]
+        ],
+        showForm: false
     };
 }
 
 ReducerRegistry.register(
     'features/polling',
-    (state: Object = _getInitialState(), action: Object) => {
+    (state = _getInitialState(), action) => {
         switch (action.type) {
         case CREATE_NEW_POLL:
-        let newState = Object.assign({}, state)
             return {
                 ...state,
-                polls: newState.polls.push(action.poll)
+                polls: state.polls.concat(action.poll)
             };
-            break;
-
+        case TOGGLE_FORM:
+            return {
+                ...state,
+                showForm: action.payload
+            };
+        case UPDATE_NEW_POLL:
+            return {
+                ...state,
+                polls: state.polls.concat(action.poll)
+            };
         case UPDATE_POLL:
             return {
                 ...state,
                 polls: action.polls
             };
-            break;
-        case NEW_POLL_CREATED:
-            return {
-                ...state,
-                polls: action.polls
-            }
         default:
             return state;
         }

@@ -85,7 +85,6 @@ import {
     participantRoleChanged,
     participantUpdated
 } from './react/features/base/participants';
-import { newPollCreated } from './react/features/polling'
 import { updateSettings } from './react/features/base/settings';
 import {
     createLocalTracksF,
@@ -108,6 +107,7 @@ import {
     mediaPermissionPromptVisibilityChanged,
     suspendDetected
 } from './react/features/overlay';
+import { updateNewPoll } from './react/features/polling'
 import { setSharedVideoStatus } from './react/features/shared-video';
 import { isButtonEnabled } from './react/features/toolbox';
 
@@ -1806,6 +1806,10 @@ export default {
 
                 APP.UI.participantConnectionStatusChanged(id);
             });
+        
+        // room.on(
+        //     JitsiConferenceEvents.E
+        // );
         room.on(
             JitsiConferenceEvents.DOMINANT_SPEAKER_CHANGED,
             id => APP.store.dispatch(dominantSpeakerChanged(id, room)));
@@ -2306,6 +2310,19 @@ export default {
             // the case when Jicofo terminates the single person left in the
             // room. It will then restart the media session when someone
             // eventually join the room which will start the stats again.
+            APP.conference.addConferenceListener(
+                JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
+                (participant, event) => {
+                    if (event['jitsi-meet-muc-msg-topic'] !== 'polls') {
+                        return;
+                    }
+                    APP.store.dispatch(updateNewPoll(event.payload.data));
+
+                    console.log('This is my participant:', participant,
+                                'This is my event', event);
+                }
+            );
+
             APP.conference.addConferenceListener(
                 JitsiConferenceEvents.BEFORE_STATISTICS_DISPOSED,
                 () => {

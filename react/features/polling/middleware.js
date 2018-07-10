@@ -1,7 +1,10 @@
 // @flow
-import { NEW_POLL_CREATED } from './actionTypes';
+import { CREATE_NEW_POLL, UPDATE_POLLS } from './actionTypes';
 import { MiddlewareRegistry } from '../base/redux';
-import { updatePolls } from './actions';
+
+import { JitsiConferenceEvents } from '../base/lib-jitsi-meet';
+import { playSound } from '../base/sounds';
+
 
 declare var APP: Object;
 
@@ -11,19 +14,30 @@ declare var APP: Object;
  * @param {Store} store - The redux store.
  * @returns {Function}
  */
-MiddlewareRegistry.register((store) => next => action => {
+MiddlewareRegistry.register(store => next => action => {
     switch (action.type) {
-    case NEW_POLL_CREATED: {
-        polls && store.dispatch(updatePolls(polls));
+    case CREATE_NEW_POLL: {
         const m = {
             'jitsi-meet-muc-msg-topic': 'polls',
             'payload': {
-                'data': polls
-            }
+                'data': action.poll
+            }   
         };
 
-        console.log('middleware ran as planned');
         typeof APP === 'object' && APP.conference._room.sendMessage(m);
+        console.log('middleware createNewpoll ran as planned', action);
+        break;
+    }
+    case UPDATE_POLLS : {
+        // const m = {
+        //     'jitsi-meet-muc-msg-topic': 'polls',
+        //     'payload': {
+        //         'data': action.polls
+        //     }
+        // }
+
+        // typeof APP === 'object' && APP.conference._room.sendMessage(m);
+        console.log('middleware ran as planned');
         break;
     }
 
@@ -32,24 +46,25 @@ MiddlewareRegistry.register((store) => next => action => {
     return next(action);
 });
 
-// /**
-//  * Syncs the redux state features/base/participants up with the redux state
-//  * features/base/conference by ensuring that the former does not contain remote
-//  * participants no longer relevant to the latter. Introduced to address an issue
-//  * with multiplying thumbnails in the filmstrip.
-//  */
-// StateListenerRegistry.register(
-//     /* selector */ state => {
-//         const { conference, joining } = state['features/base/conference'];
-
-//         return conference || joining;
-//     },
-//     /* listener */ (conference, { dispatch, getState }) => {
-//         for (const p of getState()['features/base/participants']) {
-//             !p.local
-//                 && (!conference || p.conference !== conference)
-//                 && dispatch(participantLeft(p.id, p.conference));
-//         }
-//     });
-
-
+/**
+ * Registers listener for {@link JitsiConferenceEvents.MESSAGE_RECEIVED} which
+ * will play a sound on the event, given that the chat is not currently visible.
+ *
+ * @param {JitsiConference} conference - The conference instance on which the
+ * new event listener will be registered.
+ * @param {Dispatch} next - The redux dispatch function to dispatch the
+ * specified action to the specified store.
+ * @private
+ * @returns {void}
+ */
+// function _addChatMsgListener(conference, { dispatch }) {
+//     // XXX Currently, there's no need to remove the listener, because the
+//     // JitsiConference instance cannot be reused. Hence, the listener will be
+//     // gone with the JitsiConference instance.
+//     conference.on(
+//         JitsiConferenceEvents.MESSAGE_RECEIVED,
+//         () => {
+//             APP.UI.isChatVisible()
+//                 || dispatch(playSound(INCOMING_MSG_SOUND_ID));
+//         });
+// }

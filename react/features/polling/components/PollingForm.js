@@ -151,6 +151,7 @@ class PollingForm extends Component<*, *> {
                 options
             }
         );
+        this.props.cancelPoll();
         this.setState(
             {
                 question: '',

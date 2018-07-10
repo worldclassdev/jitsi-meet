@@ -8,7 +8,7 @@ import { translate } from '../../base/i18n';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { AkFieldRadioGroup } from '@atlaskit/field-radio-group';
 import PollingForm from './PollingForm';
-import { createNewPoll } from '../actions';
+import { createNewPoll, toggleForm } from '../actions';
 
 
 /**
@@ -35,7 +35,7 @@ class PollingDialog extends Component<> {
          *
          * @type {Function}
          */
-        newPoll: PropTypes.func,
+        createNewPoll: PropTypes.func,
 
         /**
          * Contains list of polls from redux
@@ -43,9 +43,20 @@ class PollingDialog extends Component<> {
         polls: PropTypes.array,
 
         /**
+         * Returns the froms current visibility state
+         */
+        showForm: PropTypes.boolean,
+
+        /**
          * The function to translate human-readable text.
          */
-        t: PropTypes.func
+        t: PropTypes.func,
+
+        /**
+         * Toggles the create new form visibility state
+         */
+        toggleForm: PropTypes.func
+
 
     };
 
@@ -57,10 +68,7 @@ class PollingDialog extends Component<> {
      */
     constructor(props) {
         super(props);
-        this.state = {
-            showForm: false
-        };
-
+        
         // Bind event handlers so they are only bound once per instance.
         this._onCreatePoll = this._onCreatePoll.bind(this);
         this._onCancelPoll = this._onCancelPoll.bind(this);
@@ -73,17 +81,16 @@ class PollingDialog extends Component<> {
      * @returns {ReactElement}
      */
     render() {
+        console.log('polls from props', this.props.polls);
         const existingPolls = this.props.polls.map((poll, i) =>
-            (<div key= { i }>
+            (<div key = { i }>
                 <AkFieldRadioGroup
                     items = { poll.options }
                     label = { `${poll.question}` }
-                    onRadioChange = { this.setValue }
-                    />
-                    <br />
-               </div>)
+                    onRadioChange = { this.setValue }/>
+                <br />
+            </div>)
         );
-
 
         return (
             <Dialog
@@ -95,9 +102,10 @@ class PollingDialog extends Component<> {
                     <div>
                         { existingPolls }
                         <br />
-                        { this.state.showForm ? <PollingForm
+                        { this.props.showForm ? <PollingForm
                             cancelPoll = { this._onCancelPoll }
-                            sendPoll = { this.props.newPoll } /> : null }
+                            sendPoll = { this.props.createNewPoll } 
+                            toggleForm = { this.props.toggleForm } /> : null }
                         <hr />
                         <ButtonGroup>
                             <Button appearance = 'subtle'>
@@ -116,11 +124,11 @@ class PollingDialog extends Component<> {
     }
 
     _onCreatePoll() {
-        this.setState({ showForm: true });
+       this.props.toggleForm(true)
     }
 
     _onCancelPoll() {
-        this.setState({ showForm: false });
+        this.props.toggleForm(false)
     }
 
 }
@@ -136,9 +144,11 @@ class PollingDialog extends Component<> {
 function _mapStateToProps(state) {
     const pollingState = state['features/polling'];
 
+    console.log(pollingState.polls);
+
     return {
         polls: pollingState.polls,
-        
+        showForm: pollingState.showForm
     };
 }
 
@@ -157,8 +167,11 @@ function _mapDispatchToProps(dispatch: Function): Object {
          * @protected
          * @returns {Object} Dispatched action.
          */
-        newPoll(poll: object) {
+        createNewPoll(poll: object) {
             dispatch(createNewPoll(poll));
+        },
+        toggleForm(formState: boolean) {
+            dispatch(toggleForm(formState));
         }
     };
 }
