@@ -82,17 +82,6 @@ function _addConferenceListeners(conference, dispatch) {
     conference.on(
         JitsiConferenceEvents.KICKED,
         () => dispatch(kickedOut(conference)));
-           
-    // conference.on(
-    //     JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
-    //     (...args) => {
-    //         if (event['jitsi-meet-muc-msg-topic'] !== 'polls') {
-    //             console.log('This is my data:', ...args);
-
-    //             return event.payload;
-    //         }
-    //     }
-    // );
 
     conference.on(
         JitsiConferenceEvents.LOCK_STATE_CHANGED,

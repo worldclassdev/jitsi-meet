@@ -21,11 +21,10 @@ MiddlewareRegistry.register(store => next => action => {
             'jitsi-meet-muc-msg-topic': 'polls',
             'payload': {
                 'data': action.poll
-            }   
+            } 
         };
 
         typeof APP === 'object' && APP.conference._room.sendMessage(m);
-        console.log('middleware createNewpoll ran as planned', action);
         break;
     }
     case UPDATE_POLLS : {
