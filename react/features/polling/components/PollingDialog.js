@@ -68,7 +68,7 @@ class PollingDialog extends Component<> {
      */
     constructor(props) {
         super(props);
-        
+
         // Bind event handlers so they are only bound once per instance.
         this._onCreatePoll = this._onCreatePoll.bind(this);
         this._onCancelPoll = this._onCancelPoll.bind(this);
@@ -81,16 +81,20 @@ class PollingDialog extends Component<> {
      * @returns {ReactElement}
      */
     render() {
-        console.log('polls from props', this.props.polls);
-        const existingPolls = this.props.polls.map((poll, i) =>
-            (<div key = { i }>
+        let existingPolls = this.props.polls
+            && this.props.polls.map((poll, i) =>
                 <AkFieldRadioGroup
                     items = { poll.options }
+                    key = { i }
                     label = { `${poll.question}` }
-                    onRadioChange = { this.setValue }/>
-                <br />
-            </div>)
-        );
+                    onRadioChange = { this.setValue }
+                    value ={ poll.question } />
+            );
+
+        if (this.props.polls.length < 1) {
+            existingPolls = (<p>Ooops!!! There are no polls at this time. Check again later or create one below :)
+            </p>);
+        }
 
         return (
             <Dialog
@@ -98,25 +102,24 @@ class PollingDialog extends Component<> {
                 submitDisabled = { true }
                 titleKey = 'polling.polling' >
                 <div className = 'polling'>
-                    <p>Vote then submit or create a poll</p>
                     <div>
-                        { existingPolls }
+                        { !this.props.showForm && existingPolls}
                         <br />
                         { this.props.showForm ? <PollingForm
-                            cancelPoll = { this._onCancelPoll }
-                            sendPoll = { this.props.createNewPoll } 
-                            toggleForm = { this.props.toggleForm } /> : null }
+                    cancelPoll = { this._onCancelPoll }
+                    sendPoll = { this.props.createNewPoll }
+                    toggleForm = { this.props.toggleForm } /> : null }
                         <hr />
                         <ButtonGroup>
-                            <Button appearance = 'subtle'>
+                    <Button appearance = 'subtle'>
                                 Submit
                             </Button>
-                            <Button
+                    <Button
                                 appearance = 'primary'
                                 onClick = { this._onCreatePoll }>
                                 Create new Poll
                             </Button>
-                        </ButtonGroup>
+                </ButtonGroup>
                     </div>
                 </div>
             </Dialog>
@@ -124,11 +127,11 @@ class PollingDialog extends Component<> {
     }
 
     _onCreatePoll() {
-       this.props.toggleForm(true)
+        this.props.toggleForm(true);
     }
 
     _onCancelPoll() {
-        this.props.toggleForm(false)
+        this.props.toggleForm(false);
     }
 
 }

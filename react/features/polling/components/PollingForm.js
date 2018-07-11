@@ -38,7 +38,8 @@ class PollingForm extends Component<*, *> {
         question: '',
         optionA: '',
         optionB: '',
-        optionC: ''
+        optionC: '',
+        voteCount: 0
     };
 
     /**
@@ -131,23 +132,13 @@ class PollingForm extends Component<*, *> {
 
     _sendPollHandler() {
         const options = [];
-
-        console.log(this.state.optionA, this.state.optionB, this.state.optionC);
         options.push(this._createOptionObject(this.state.optionA));
         options.push(this._createOptionObject(this.state.optionB));
         options.push(this._createOptionObject(this.state.optionC));
 
-        console.log(
-            {
-                question: this.state.question,
-                value: '',
-                options
-            });
-
         this.props.sendPoll(
             {
                 question: this.state.question,
-                value: '',
                 options
             }
         );

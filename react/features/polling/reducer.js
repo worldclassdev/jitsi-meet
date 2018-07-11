@@ -27,32 +27,7 @@ function _getInitialState() {
          *
          * @type {Array}
          */
-        polls: [
-            {
-                question: 'What is your favourite color?',
-                value: '',
-                options: [
-                    {
-                        name: 'color2',
-                        value: 'red',
-                        label: 'Red',
-                        voteCount: 1
-                    },
-                    {
-                        name: 'color2',
-                        value: 'blue',
-                        label: 'Blue',
-                        voteCount: 3
-                    },
-                    {
-                        name: 'color2',
-                        value: 'yellow',
-                        label: 'Yellow',
-                        voteCount: 6
-                    }
-                ]
-            }
-        ],
+        polls: [],
         showForm: false
     };
 }

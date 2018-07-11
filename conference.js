@@ -2316,7 +2316,7 @@ export default {
                     if (event['jitsi-meet-muc-msg-topic'] !== 'polls') {
                         return;
                     }
-                    console.log(event.payload.data)
+                    console.log(event.payload.data);
                     APP.store.dispatch(updateNewPoll(event.payload.data));
 
                     console.log('This is my participant:', participant,
