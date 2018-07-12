@@ -4,7 +4,7 @@ import { ReducerRegistry } from '../base/redux';
 
 import {
     CREATE_NEW_POLL,
-    TOGGLE_FORM,
+    TOGGLE_VIEW,
     UPDATE_NEW_POLL,
     UPDATE_POLL
 } from './actionTypes';
@@ -27,8 +27,33 @@ function _getInitialState() {
          *
          * @type {Array}
          */
-        polls: [],
-        showForm: false
+        polls: [
+            {
+                question: 'What is your favourite javscript framework?',
+                value: '',
+                options: [
+                    {
+                        name: 'color2',
+                        value: 'react',
+                        label: 'React',
+                        voteCount: 1
+                    },
+                    {
+                        name: 'color2',
+                        value: 'angular',
+                        label: `Angular`,
+                        voteCount: 3
+                    },
+                    {
+                        name: 'color2',
+                        value: 'vue',
+                        label: 'Vue',
+                        voteCount: 6
+                    }
+                ]
+            }
+        ],
+        activeView: 'polls'
     };
 }
 
@@ -41,10 +66,10 @@ ReducerRegistry.register(
                 ...state,
                 polls: state.polls.concat(action.poll)
             };
-        case TOGGLE_FORM:
+        case TOGGLE_VIEW:
             return {
                 ...state,
-                showForm: action.payload
+                activeView: action.view
             };
         case UPDATE_NEW_POLL:
             return {

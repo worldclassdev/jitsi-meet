@@ -18,7 +18,7 @@ MiddlewareRegistry.register(store => next => action => {
     switch (action.type) {
     case CREATE_NEW_POLL: {
         const m = {
-            'jitsi-meet-muc-msg-topic': 'polls',
+            'jitsi-meet-muc-msg-topic': 'newPoll',
             'payload': {
                 'data': action.poll
             } 

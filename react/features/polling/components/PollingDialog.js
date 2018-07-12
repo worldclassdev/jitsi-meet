@@ -8,7 +8,8 @@ import { translate } from '../../base/i18n';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { AkFieldRadioGroup } from '@atlaskit/field-radio-group';
 import PollingForm from './PollingForm';
-import { createNewPoll, toggleForm } from '../actions';
+import PollingResults from './PollingResults';
+import { createNewPoll, toggleView } from '../actions';
 
 
 /**
@@ -43,9 +44,9 @@ class PollingDialog extends Component<> {
         polls: PropTypes.array,
 
         /**
-         * Returns the froms current visibility state
+         * Returns the current active view
          */
-        showForm: PropTypes.boolean,
+        activeView: PropTypes.string,
 
         /**
          * The function to translate human-readable text.
@@ -55,7 +56,7 @@ class PollingDialog extends Component<> {
         /**
          * Toggles the create new form visibility state
          */
-        toggleForm: PropTypes.func
+        toggleView: PropTypes.func
 
 
     };
@@ -72,7 +73,16 @@ class PollingDialog extends Component<> {
         // Bind event handlers so they are only bound once per instance.
         this._onCreatePoll = this._onCreatePoll.bind(this);
         this._onCancelPoll = this._onCancelPoll.bind(this);
+        this._onViewResults = this._onViewResults.bind(this);
+        this._renderView = this._renderView.bind(this);
     }
+
+    // componentDidMount(){
+    //     let chartLabels, data = []
+    //     this.props.polls.map((poll) => {
+    //         chartLabels.push(poll.)
+    //     });
+    // }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -81,19 +91,39 @@ class PollingDialog extends Component<> {
      * @returns {ReactElement}
      */
     render() {
+        const data = {
+            labels: [
+                'Angular',
+                'React',
+                'Vue'
+            ],
+            datasets: [ {
+                data: [ 30, 50, 20 ],
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56'
+                ],
+                hoverBackgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56'
+                ]
+            } ]
+        };
         let existingPolls = this.props.polls
             && this.props.polls.map((poll, i) =>
-                <AkFieldRadioGroup
+                (<AkFieldRadioGroup
                     items = { poll.options }
                     key = { i }
                     label = { `${poll.question}` }
                     onRadioChange = { this.setValue }
-                    value ={ poll.question } />
+                    value ={ poll.question } />)
             );
 
         if (this.props.polls.length < 1) {
-            existingPolls = (<p>Ooops!!! There are no polls at this time. Check again later or create one below :)
-            </p>);
+            existingPolls = <p>Ooops!!! There are no polls at this time. Check again later or create one below :)
+            </p>;
         }
 
         return (
@@ -103,23 +133,23 @@ class PollingDialog extends Component<> {
                 titleKey = 'polling.polling' >
                 <div className = 'polling'>
                     <div>
-                        { !this.props.showForm && existingPolls}
-                        <br />
-                        { this.props.showForm ? <PollingForm
-                    cancelPoll = { this._onCancelPoll }
-                    sendPoll = { this.props.createNewPoll }
-                    toggleForm = { this.props.toggleForm } /> : null }
+                        { this._renderView(this.props.activeView, existingPolls, data)}
                         <hr />
                         <ButtonGroup>
-                    <Button appearance = 'subtle'>
+                            <Button appearance = 'subtle'>
                                 Submit
-                            </Button>
-                    <Button
-                                appearance = 'primary'
-                                onClick = { this._onCreatePoll }>
+                    </Button>
+                            <Button
+                        appearance = 'primary'
+                        onClick = { this._onCreatePoll }>
                                 Create new Poll
-                            </Button>
-                </ButtonGroup>
+                    </Button>
+                    <Button
+                        appearance = 'primary'
+                        onClick = { this._onViewResults }>
+                                View Results
+                    </Button>
+                        </ButtonGroup>
                     </div>
                 </div>
             </Dialog>
@@ -127,11 +157,35 @@ class PollingDialog extends Component<> {
     }
 
     _onCreatePoll() {
-        this.props.toggleForm(true);
+        this.props.toggleView('form');
     }
 
     _onCancelPoll() {
-        this.props.toggleForm(false);
+        this.props.toggleView('polls');
+    }
+
+    _onViewResults(){
+        this.props.toggleView('results');
+    }
+
+    _renderView(activeView, existingPolls,data) {
+        switch (activeView) {
+        case 'polls':
+            return existingPolls;
+            break;
+        case 'form': {
+            return <PollingForm
+                    cancelPoll = { this._onCancelPoll }
+                    sendPoll = { this.props.createNewPoll } />;
+            break;
+        }
+        case 'results': {
+            return <PollingResults data={data} />;
+            break;
+        }
+        default:
+            break;
+        }
     }
 
 }
@@ -151,7 +205,7 @@ function _mapStateToProps(state) {
 
     return {
         polls: pollingState.polls,
-        showForm: pollingState.showForm
+        activeView: pollingState.activeView
     };
 }
 
@@ -173,8 +227,8 @@ function _mapDispatchToProps(dispatch: Function): Object {
         createNewPoll(poll: object) {
             dispatch(createNewPoll(poll));
         },
-        toggleForm(formState: boolean) {
-            dispatch(toggleForm(formState));
+        toggleView(view: string) {
+            dispatch(toggleView(view));
         }
     };
 }

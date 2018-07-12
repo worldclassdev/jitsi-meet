@@ -2,7 +2,7 @@
 
 import {
     CREATE_NEW_POLL,
-    TOGGLE_FORM,
+    TOGGLE_VIEW,
     UPDATE_NEW_POLL,
     UPDATE_POLLS
 } from './actionTypes';
@@ -53,10 +53,10 @@ export function updatePolls(polls: Array) {
  *     type: TOGGLE_FORM
  * }}
  */
-export function toggleForm(formState: boolean) {
+export function toggleView(view: string) {
     return {
-        type: TOGGLE_FORM,
-        payload: formState
+        type: TOGGLE_VIEW,
+        view
     };
 }
 

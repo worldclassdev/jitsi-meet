@@ -40,3 +40,12 @@ export const UPDATE_POLLS = Symbol('UPDATE_POLLS');
  */
 export const TOGGLE_FORM = Symbol('TOGGLE_FORM');
 
+/**
+ * Manages the manipulation of the views.
+ *
+ * {
+ *     type: TOGGLE_VIEW,
+ *     view: string
+ * }
+ */
+export const TOGGLE_VIEW = Symbol('TOGGLE_VIEW');

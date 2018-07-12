@@ -2313,7 +2313,7 @@ export default {
             APP.conference.addConferenceListener(
                 JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
                 (participant, event) => {
-                    if (event['jitsi-meet-muc-msg-topic'] !== 'polls') {
+                    if (event['jitsi-meet-muc-msg-topic'] !== 'newPoll') {
                         return;
                     }
                     console.log(event.payload.data);
